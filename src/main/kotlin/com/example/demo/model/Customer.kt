@@ -16,14 +16,4 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 
 @Document
-class Customer {
-
-    @Id
-    lateinit var id: String
-    lateinit var name: String
-    lateinit var email: String
-    lateinit var city : String
-    lateinit var state : String
-    lateinit var country : String
-
-}
+data class Customer(@Id var id:String, var name:String,var email: String,var city: String, var state: String, var country : String)

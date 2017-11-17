@@ -2,10 +2,12 @@ package com.example.demo
 
 import com.example.demo.model.Customer
 import com.example.demo.repo.CustomerRepo
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
+import org.springframework.web.reactive.function.server.ServerResponse.status
 import reactor.core.publisher.Mono
 import java.util.*
 
@@ -36,10 +38,10 @@ class CustomerHandler {
     {
         var customerLocal = request.bodyToMono(Customer::class.java).block();
             customerLocal.id = UUID.randomUUID().toString()
-        return ok().body(customerRepo.save(customerLocal), Customer::class.java)
+        return status(HttpStatus.CREATED).body(customerRepo.save(customerLocal), Customer::class.java)
     }
 
-     fun get(request : ServerRequest) : Mono<ServerResponse>
+    fun get(request : ServerRequest) : Mono<ServerResponse>
     {
         val customer = customerRepo.findById(request.bodyToMono(String::class.java))
         return ok().body(customer, Customer::class.java)
@@ -51,7 +53,7 @@ class CustomerHandler {
         return ok().build()
     }
 
-     fun getAll() : Mono<ServerResponse>
+     fun getAll(request : ServerRequest) : Mono<ServerResponse>
     {
         var customer = customerRepo.findAll()
         return ok().body(customer, Customer::class.java)

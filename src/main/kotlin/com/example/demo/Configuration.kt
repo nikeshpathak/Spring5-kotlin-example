@@ -4,8 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import org.springframework.web.reactive.function.server.*
-import org.springframework.web.reactive.function.server.RequestPredicates.GET
-import org.springframework.web.reactive.function.server.RequestPredicates.POST
+import org.springframework.web.reactive.function.server.RequestPredicates.*
 import org.springframework.web.reactive.function.server.RouterFunctions.route
 
 
@@ -28,9 +27,9 @@ class Configuration {
     fun router(customerService : CustomerHandler) : RouterFunction<ServerResponse>
     {
         return route(GET("/customer/{id}"), HandlerFunction(customerService::get))
-                .and(route(POST("/customer"), HandlerFunction(customerService::add)))
-                .and(route(POST("/customer/{id}"), HandlerFunction(customerService::delete)))
-                .and(route(POST("/customer/getAll"), HandlerFunction {customerService.getAll()}))
+                .andRoute(POST("/customer"), HandlerFunction(customerService::add))
+                .andRoute(DELETE("/customer/{id}"), HandlerFunction(customerService::delete))
+                .andRoute(GET("/customer"), HandlerFunction(customerService::getAll))
     }
 
 }
