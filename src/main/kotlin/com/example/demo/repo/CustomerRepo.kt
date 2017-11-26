@@ -2,6 +2,7 @@ package com.example.demo.repo
 
 import com.example.demo.model.Customer
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
+import reactor.core.publisher.Mono
 
 
 /* Copyright 2017 Nikesh Pathak
@@ -15,6 +16,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. */
 
-interface CustomerRepo : ReactiveMongoRepository<Customer,String>{
-
+interface CustomerRepo : ReactiveMongoRepository<Customer,String>
+{
+    fun findByCustId(custId : String) : Mono<Customer>
 }

@@ -8,7 +8,10 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.ServerResponse.status
+import org.springframework.web.reactive.function.server.bodyToServerSentEvents
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.Duration
 import java.util.*
 
 
@@ -27,36 +30,30 @@ limitations under the License. */
 class CustomerHandler {
 
 
-     var customerRepo : CustomerRepo
+    var customerRepo: CustomerRepo
 
-    constructor(customerRepo: CustomerRepo)
-    {
+    constructor(customerRepo: CustomerRepo) {
         this.customerRepo = customerRepo
     }
 
-     fun add(request : ServerRequest) : Mono<ServerResponse>
-    {
-        var customerLocal = request.bodyToMono(Customer::class.java).block();
-            customerLocal.id = UUID.randomUUID().toString()
+    fun add(request: ServerRequest): Mono<ServerResponse> {
+        var customerLocal = request.bodyToMono(Customer::class.java).block()
+        customerLocal.custId = UUID.randomUUID().toString()
         return status(HttpStatus.CREATED).body(customerRepo.save(customerLocal), Customer::class.java)
     }
 
-    fun get(request : ServerRequest) : Mono<ServerResponse>
-    {
-        val customer = customerRepo.findById(request.bodyToMono(String::class.java))
+    fun get(request: ServerRequest): Mono<ServerResponse> {
+        val customer = customerRepo.findByCustId(request.pathVariable("id")).onErrorMap { e -> Exception(e.message) }
         return ok().body(customer, Customer::class.java)
     }
 
-     fun delete(request: ServerRequest) : Mono<ServerResponse>
-    {
+    fun delete(request: ServerRequest): Mono<ServerResponse> {
         customerRepo.deleteById(request.bodyToMono(String::class.java))
         return ok().build()
     }
 
-     fun getAll(request : ServerRequest) : Mono<ServerResponse>
-    {
-        var customer = customerRepo.findAll()
-        return ok().body(customer, Customer::class.java)
+    fun getAll(request: ServerRequest): Mono<ServerResponse> {
+        return ok().bodyToServerSentEvents(Flux.interval(Duration.ofMillis(1000)).zipWith(customerRepo.findAll()).map { s -> s.t2 })
     }
 
 }

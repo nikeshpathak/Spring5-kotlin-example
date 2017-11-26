@@ -20,32 +20,31 @@ import java.util.stream.Collectors
 @SpringBootTest
 class DemoApplicationTests {
 
-	lateinit var client : WebTestClient
+    lateinit var client: WebTestClient
 
-	@Autowired
-	lateinit var routerFunction : RouterFunction<ServerResponse>
+    @Autowired
+    lateinit var routerFunction: RouterFunction<ServerResponse>
 
-	@Before
-	fun setUp()
-	{
-		client = WebTestClient.bindToRouterFunction(routerFunction).build()
-	}
+    @Before
+    fun setUp() {
+        client = WebTestClient.bindToRouterFunction(routerFunction).build()
+    }
 
-	@Test
-	fun getCustomer() {
+    @Test
+    fun getCustomer() {
 
-		var result = client.get().uri("/customer").exchange().expectStatus().isOk.returnResult<Customer>()
-		var customerList = result.responseBody.toStream().collect(Collectors.toList())
-		Assert.assertNotNull(customerList)
-		Assert.assertTrue(customerList.size>0)
-	}
+        var result = client.get().uri("/customer").exchange().expectStatus().isOk.returnResult<Customer>()
+        var customerList = result.responseBody.toStream().collect(Collectors.toList())
+        Assert.assertNotNull(customerList)
+        Assert.assertTrue(customerList.size > 0)
+    }
 
-	@Test
-	fun addCustomer()
-	{
-		var customer = Mono.just(Customer(UUID.randomUUID().toString(),"Ritesh","ritesh@test.com","Pune","Maharastra","India"))
-		client.post().uri("/customer").body(customer,Customer::class.java).exchange().expectStatus().isCreated
+    @Test
+    fun addCustomer() {
 
-	}
+        var customer = Mono.just(Customer(UUID.randomUUID().toString(), "Ritesh", "ritesh@test.com", "Pune", "Maharastra", "India"))
+        client.post().uri("/customer").body(customer, Customer::class.java).exchange().expectStatus().isCreated
+
+    }
 
 }

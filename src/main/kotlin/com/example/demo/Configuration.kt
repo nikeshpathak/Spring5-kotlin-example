@@ -3,9 +3,12 @@ package com.example.demo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
-import org.springframework.web.reactive.function.server.*
+import org.springframework.http.MediaType
+import org.springframework.web.reactive.function.server.HandlerFunction
 import org.springframework.web.reactive.function.server.RequestPredicates.*
+import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctions.route
+import org.springframework.web.reactive.function.server.ServerResponse
 
 
 /* Copyright 2017 Nikesh Pathak
@@ -24,12 +27,11 @@ limitations under the License. */
 class Configuration {
 
     @Bean
-    fun router(customerService : CustomerHandler) : RouterFunction<ServerResponse>
-    {
+    fun router(customerService: CustomerHandler): RouterFunction<ServerResponse> {
         return route(GET("/customer/{id}"), HandlerFunction(customerService::get))
                 .andRoute(POST("/customer"), HandlerFunction(customerService::add))
                 .andRoute(DELETE("/customer/{id}"), HandlerFunction(customerService::delete))
-                .andRoute(GET("/customer"), HandlerFunction(customerService::getAll))
+                .andRoute(GET("/customer").and(accept(MediaType.TEXT_EVENT_STREAM)), HandlerFunction(customerService::getAll))
     }
 
 }
