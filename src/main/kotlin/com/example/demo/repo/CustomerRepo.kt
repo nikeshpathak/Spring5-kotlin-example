@@ -19,4 +19,6 @@ limitations under the License. */
 interface CustomerRepo : ReactiveMongoRepository<Customer,String>
 {
     fun findByCustId(custId : String) : Mono<Customer>
+
+     fun deleteByCustId(id: String)
 }

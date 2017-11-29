@@ -42,7 +42,7 @@ class DemoApplicationTests {
     @Test
     fun addCustomer() {
 
-        var customer = Mono.just(Customer(UUID.randomUUID().toString(), "Ritesh", "ritesh@test.com", "Pune", "Maharastra", "India"))
+        var customer = Mono.just(Customer(UUID.randomUUID().toString(), "Nitesh", "Nitesh@test.com", "Pune", "Maharastra", "India"))
         client.post().uri("/customer").body(customer, Customer::class.java).exchange().expectStatus().isCreated
 
     }

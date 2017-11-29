@@ -2,7 +2,6 @@ package com.example.demo
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.HandlerFunction
 import org.springframework.web.reactive.function.server.RequestPredicates.*
@@ -23,15 +22,15 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 
 @Configuration
-@EnableReactiveMongoRepositories
+//@EnableReactiveMongoRepositories
 class Configuration {
 
     @Bean
-    fun router(customerService: CustomerHandler): RouterFunction<ServerResponse> {
-        return route(GET("/customer/{id}"), HandlerFunction(customerService::get))
-                .andRoute(POST("/customer"), HandlerFunction(customerService::add))
-                .andRoute(DELETE("/customer/{id}"), HandlerFunction(customerService::delete))
-                .andRoute(GET("/customer").and(accept(MediaType.TEXT_EVENT_STREAM)), HandlerFunction(customerService::getAll))
+    fun router(customerHandler: CustomerHandler): RouterFunction<ServerResponse> {
+        return route(GET("/customer/{id}"), HandlerFunction(customerHandler::get))
+                .andRoute(POST("/customer"), HandlerFunction(customerHandler::add))
+                .andRoute(DELETE("/customer/{id}"), HandlerFunction(customerHandler::delete))
+                .andRoute(GET("/customer").and(accept(MediaType.TEXT_EVENT_STREAM)), HandlerFunction(customerHandler::getAll))
     }
 
 }

@@ -48,7 +48,7 @@ class CustomerHandler {
     }
 
     fun delete(request: ServerRequest): Mono<ServerResponse> {
-        customerRepo.deleteById(request.bodyToMono(String::class.java))
+        customerRepo.deleteByCustId(request.pathVariable("id"))
         return ok().build()
     }
 

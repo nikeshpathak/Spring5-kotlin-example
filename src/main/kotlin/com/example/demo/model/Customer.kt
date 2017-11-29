@@ -16,4 +16,5 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 
 @Document
-data class Customer(@Field("custId") var custId:String, var name:String, var email: String, var city: String, var state: String, var country : String)
+data class Customer(@Field("custId") var custId:String, var name:String, var email: String,
+                    var city: String, var state: String, var country : String)
